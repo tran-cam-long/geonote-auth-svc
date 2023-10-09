@@ -34,6 +34,19 @@ spotless {
   }
 }
 
+sonar {
+  properties {
+    property("sonar.host.url", "http://localhost:9001")
+    property("sonar.projectKey", "com.trancamlong.geonote.auth")
+    property("sonar.projectName", ".geonote-auth-svc")
+    property("sonar.java.sources", "./src")
+    property("sonar.dynamicAnalysis", "reuseReports")
+    property("sonar.junit.reportsPath", "**/build/test-results/test/TEST-*.xml")
+    property("sonar.test.exclusions", "**/test/**")
+    property("sonar.coverage.exclusions", "**/model/*, **/constant/*, **/api/*")
+  }
+}
+
 tasks.build { dependsOn("spotlessApply") }
 
 dependencies {
@@ -48,7 +61,6 @@ dependencies {
   // OpenAPI
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
-  implementation("org.slf4j:slf4j-log4j12:1.7.25")
   implementation("org.slf4j:slf4j-jdk14:1.7.25")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")

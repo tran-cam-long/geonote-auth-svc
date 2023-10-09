@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+  title: Centralized Token Service
+  version: 1.0.0
+  description: Service to provide JWT or OAuth tokens for securing inter-service communication and user access.
+
+paths:
+  /token/jwt:
+    post:
+      tags:
+        - Token
+      summary: Generate a JWT token
+      description: Generate a JWT token based on the provided credentials or payload.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWTRequest'
+      responses:
+        '200':
+          description: Successful response with JWT token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTResponse'
+        '401':
+          description: Unauthorized. Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /token/oauth:
+    post:
+      tags:
+        - Token
+      summary: Generate an OAuth token
+      description: Generate an OAuth token based on the provided authorization code or refresh token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuthRequest'
+      responses:
+        '200':
+          description: Successful response with OAuth token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthResponse'
+        '401':
+          description: Unauthorized. Invalid authorization code or refresh token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    JWTRequest:
+      type: object
+      properties:
+        payload:
+          type: object
+          example: {
+            userId: 123452,
+            username: "john_doe",
+            role: "admin"
+          }
+          description: Payload data for the JWT token. This is an object.
+        secret:
+          type: string
+          example: "supersecretkey123"
+          description: Secret key to sign the JWT token.
+
+    JWTResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMzQ1LCJ1c2VybmFtZSI6ImpvaG5fZG9lIiwicm9sZSI6ImFkbWluIn0.iO2jltO3f4YDUsmMJKuQEz6WlAxMjhvzvF5ZKPZaK5s"
+          description: Generated JWT token.
+
+    OAuthRequest:
+      type: object
+      properties:
+        authorization_code:
+          type: string
+          example: "refresh_67890"
+          description: Authorization code to exchange for an OAuth token.
+        refresh_token:
+          type: string
+          description: Refresh token to renew the OAuth token.
+
+    OAuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "accesstoken_12345"
+          description: Generated OAuth access token.
+        token_type:
+          type: string
+          example: "Bearer"
+          description: Type of the token, typically "Bearer".
+        expires_in:
+          type: integer
+          example: "3600"
+          description: Time in seconds until the token expires.
+        refresh_token:
+          type: string
+          example: "refresh_67890"
+          description: Token to renew the access token when it expires.
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid authorization code"
+          description: Error message or code.

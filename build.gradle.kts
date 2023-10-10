@@ -64,6 +64,16 @@ dependencies {
   implementation("org.slf4j:slf4j-jdk14:1.7.25")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+  // Actuator, metric, logging and tracing
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
+  implementation("org.springframework.boot:spring-boot-starter-logging")
+
+  // Micrometer
+  implementation("io.micrometer:micrometer-core:1.11.4")
+  implementation("io.micrometer:micrometer-registry-prometheus:1.11.4")
+
+
 }
 
 tasks.withType<Test> { useJUnitPlatform() }
@@ -98,3 +108,13 @@ tasks.openApiGenerate {
 sourceSets { main { java { srcDirs("$buildDir/generated/openapi/src/main/java") } } }
 
 tasks.withType<JavaCompile> { dependsOn(tasks.openApiGenerate) }
+
+buildscript {
+  dependencies {
+    classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
+  }
+}
+
+dependencyManagement {
+  imports { mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.2") } }
+

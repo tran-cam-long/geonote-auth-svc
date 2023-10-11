@@ -10,6 +10,7 @@ paths:
       tags:
         - Token
       summary: Generate a JWT token
+      operationId: generateJwt
       description: Generate a JWT token based on the provided credentials or payload.
       requestBody:
         content:
@@ -35,6 +36,7 @@ paths:
       tags:
         - Token
       summary: Generate an OAuth token
+      operationId: generateOauthToken
       description: Generate an OAuth token based on the provided authorization code or refresh token.
       requestBody:
         content:

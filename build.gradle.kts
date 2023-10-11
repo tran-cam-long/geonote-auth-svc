@@ -69,11 +69,12 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-logging")
 
-  // Micrometer
-  implementation("io.micrometer:micrometer-core:1.11.4")
-  implementation("io.micrometer:micrometer-registry-prometheus:1.11.4")
-
-
+  // Open telemetry
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
+  implementation("io.micrometer:micrometer-registry-prometheus")
+  implementation("io.micrometer:micrometer-tracing-bridge-otel")
+  implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
+  implementation("com.github.loki4j:loki-logback-appender:1.4.2")
 }
 
 tasks.withType<Test> { useJUnitPlatform() }
@@ -110,11 +111,9 @@ sourceSets { main { java { srcDirs("$buildDir/generated/openapi/src/main/java") 
 tasks.withType<JavaCompile> { dependsOn(tasks.openApiGenerate) }
 
 buildscript {
-  dependencies {
-    classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
-  }
+  dependencies { classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE") }
 }
 
 dependencyManagement {
-  imports { mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.2") } }
-
+  imports { mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.2") }
+}
